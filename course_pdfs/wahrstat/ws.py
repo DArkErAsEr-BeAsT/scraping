@@ -10,7 +10,7 @@ from glob import glob
 
 from selenium.common.exceptions import NoSuchElementException
 import io
-ws_folder = "/home/david/Documents/projects/scraping/course_pdfs/wahrstat"
+ws_folder = "/Users/darkeraser/Documents/projects/scraping/course_pdfs/wahrstat"
 import os
 
 def pdf_merge(path, output_filename):
@@ -66,7 +66,7 @@ def main():
     chrome_options.add_argument("--disable-blink-features=AutomationControlled")
     chrome_options.add_argument('--ignore-certificate-errors')
     chrome_options.add_argument('--disable-dev-shm-usage')
-    driver = webdriver.Chrome( executable_path="/usr/local/bin/chromedriver",options=chrome_options)
+    driver = webdriver.Chrome( executable_path="chromedriver",options=chrome_options)
     driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
 
     scrape_ex_pdfs(driver)
