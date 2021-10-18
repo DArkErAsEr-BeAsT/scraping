@@ -1,7 +1,7 @@
 from logging import lastResort, log
 from selenium import webdriver
 import selenium
-from bs4 import BeautifulSoup
+#from bs4 import BeautifulSoup
 from selenium.webdriver.common.keys import Keys
 import re
 from selenium.webdriver.common.action_chains import ActionChains
@@ -77,7 +77,7 @@ def login():
     #chrome_options.add_experimental_option("detach", True)
     
     #driver.delete_all_cookies()
-    driver = webdriver.Chrome("/home/darkeraser/Documents/projects/bot_vac/chromedriver", options=chrome_options)
+    driver = webdriver.Chrome( options=chrome_options)
     
     driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
     driver.get("https://zh.vacme.ch/")
@@ -88,7 +88,7 @@ def login():
     username = driver._web_element_cls
     try:
         username = driver.find_element_by_id("username")
-        username.send_keys("kajetan.pyszkowski@epfl.ch")
+        username.send_keys("pierre.eichmeyer@gmail.com")
     except NoSuchElementException:
         
         login_but = driver.find_element_by_xpath("/html/body/div/app-root/app-landingpage/div/div[2]/p/a")
@@ -96,11 +96,11 @@ def login():
         
         login_but.click()
         username = driver.find_element_by_id("username")
-        username.send_keys("kajetan.pyszkowski@epfl.ch")
+        username.send_keys("pierre.eichmeyer@gmail.com")
 
     password = driver.find_element_by_id("password")
     
-    password.send_keys("brem4thot_GNOP1dail")
+    password.send_keys("Architecte17/04")
     password.send_keys(Keys.RETURN)
     time.sleep(7)
     code = get_code()
@@ -132,7 +132,7 @@ def login():
 def select_app1(driver):
     notSelected1 = True
     while (notSelected1):
-        time.sleep(1)
+        time.sleep(10)
         if (driver.find_elements_by_class_name("swal2-popup swal2-modal swal2-icon-warning swal2-show")):
             driver.find_elements_by_class_name("swal2-popup swal2-modal swal2-icon-warning swal2-show").send_keys(Keys.ESCAPE)
             print("removed popup")
@@ -157,7 +157,7 @@ def select_app1(driver):
                 else:
                     if (driver.find_elements_by_xpath("/html/body/div/app-root/app-terminfindung-page/div/lib-terminfindung/div/lib-date-spinner/div/b")):
                         date = driver.find_element_by_xpath("/html/body/div/app-root/app-terminfindung-page/div/lib-terminfindung/div/lib-date-spinner/div/b").text
-                        if (extract_date(date) != "05" or int(extract_day(date)) >27 or int(extract_day(date)) < 21):
+                        if (extract_date(date) != "07" or int(extract_day(date)) >18):
                             back_but = driver.find_element_by_xpath("/html/body/div/app-root/div/lib-menu/nav/div[1]/a/div")
                             back_but.click()
                             print("pressed back button on app1")
@@ -190,9 +190,16 @@ def select_app2(driver):
         try:
             time.sleep(1)
             app2_step2_select = driver.find_element_by_xpath("/html/body/div/app-root/app-terminfindung-page/div/lib-terminfindung/div/div/div[1]/lib-button/button")
-            app2_step2_select.click()
-            notSelected2 = False
-            print("selected hour app2", notSelected2)
+            date = driver.find_element_by_xpath("/html/body/div/app-root/app-terminfindung-page/div/lib-terminfindung/div/lib-date-spinner/div/b")
+            if ( int(extract_day(date.text))!= 13):
+                            back_but = driver.find_element_by_xpath("/html/body/div/app-root/div/lib-menu/nav/div[1]/a/div")
+                            back_but.click()
+                            print("pressed back button on app1")
+                            select_app_caller(driver)
+            else:
+                app2_step2_select.click()
+                notSelected2 = False
+                print("selected hour app2", notSelected2)
         except NoSuchElementException:
             back_but = driver.find_element_by_xpath("/html/body/div/app-root/app-terminfindung-page/div/a")
             back_but.click()
@@ -204,7 +211,7 @@ def get_code():
 
     with MailBox('imap.gmail.com').login('darkcolonna@gmail.com', '2SbuHX9gPzZfgT') as mailbox:
         for msg in mailbox.fetch(limit=1, reverse=True):
-            code = re.search('is: (.*?) \(', msg.text)
+            code = re.findall(r'\d+', msg.text)
         #mailbox.logout()
-    return code.group(1)
+    return code.pop()
 main()
