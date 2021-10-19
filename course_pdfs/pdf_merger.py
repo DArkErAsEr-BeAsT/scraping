@@ -1,15 +1,10 @@
 #!/usr/bin/python
-import PyPDF2
 from selenium import webdriver
-import urllib.request
-import time
 import os.path
 from PyPDF2 import PdfFileWriter, PdfFileReader
 from argparse import ArgumentParser
 from glob import glob
 
-from selenium.common.exceptions import NoSuchElementException
-import io
 ti_folder = "/Users/darkeraser/Documents/projects/scraping/course_pdfs/exams_TI"
 import os
 
@@ -48,9 +43,6 @@ if __name__ == "__main__":
 
 
 def main():
-    pdf_merge(ti_folder, ti_folder+"/exam.pdf")
-
-
-
+    pdf_merge(ti_folder, ti_folder+"/result.pdf")
 
 main()
