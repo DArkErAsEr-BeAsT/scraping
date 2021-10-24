@@ -1,0 +1,1 @@
+FROM sskorol/vosk-api:0.3.30-pc
