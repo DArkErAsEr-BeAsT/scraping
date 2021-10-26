@@ -36,6 +36,7 @@ def main():
             os.remove(JSON_PATH)
         open(JSON_PATH, 'w')
         vosk_rec_thorough()
+        player()
     elif value == 's':
         vosk_rec_small()
     elif value =='n':
@@ -122,6 +123,14 @@ def vosk_rec_thorough():
         with open(JSON_PATH, 'a+') as output:
             print(word.to_txt(), file=output)
 
+    with open(JSON_PATH_1, 'w') as output:
+        print(results, file=output)
+
+   
+
+    # write text portion of results to a file
+    with open(TXTOUT_PATH_1, 'w') as output:
+        print(json.dumps(textResults, indent=4), file=output)
     # write text portion of results to a file
     # with open(TXTOUT_PATH, 'w') as output:
     #     print(json.dumps(textResults, indent=4), file=output)
