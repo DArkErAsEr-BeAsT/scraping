@@ -14,7 +14,7 @@ def main():
     #     search_mac("10.0.0."+str(i))
     for i in range(5):
         ls = [("10.0.0."+str(i)) for i in range(55)]
-        with ThreadPoolExecutor(32) as exec:
+        with ThreadPoolExecutor(4) as exec:
             resp = exec.map(search_mac, ls)
     d_list = []
     k_list = []
