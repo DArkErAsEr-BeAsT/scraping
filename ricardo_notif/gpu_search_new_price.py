@@ -39,9 +39,9 @@ def list_search_items():
     rx_6700 = Product_Price("6700", 900)
     rx_6800 = Product_Price("6800", 1000)
     rx_6900 = Product_Price("6900", 1200)
-    rtx_3070 = Product_Price("3070", 950)
+    rtx_3070 = Product_Price("3070", 1950)
     rtx_3060 = Product_Price("3060", 850)
-    rtx_3080 = Product_Price("3080", 1500)
+    rtx_3080 = Product_Price("3080", 200)
     rtx_3090 = Product_Price("3090", 2300)
     rtx_2070 = Product_Price("2070", 850)
     rtx_2060 = Product_Price("2060",600)
@@ -124,9 +124,11 @@ def search_ricardo(driver, pb):
     #sleep(10)
     for i in range(1,60):
         try:                                      
-            element = driver.find_element_by_xpath("/html/body/div[1]/div/section/div/div/div[2]/div[1]/main/div[5]/div/a["+str(i)+"]/div/div[2]/p")
+            element = driver.find_element_by_xpath("/html/body/div[1]/div/section/div/div/div[2]/div[1]/main/div[5]/div/a["+str(i)+"]/div/div[3]")
+            # /html/body/div[1]/div/section/div/div/div[2]/div[1]/main/div[5]/div/a[12]/div/div[3]
             #print(element.text)
             buy_now_price = driver.find_element_by_xpath("/html/body/div[1]/div/section/div/div/div[2]/div[1]/main/div[5]/div/a["+str(i)+"]/div/div[2]/div[2]/div[2]/div/div[2]/p")
+            
             for j in pair_list:
                 if j.prod in element.text:
                     if(float(truncate_price(buy_now_price.text, "ricardo")) <= j.price):

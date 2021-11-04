@@ -10,9 +10,15 @@ import os
 os.add_dll_directory(os.getcwd())
 import vlc
 import time
+import tkinter as tk
+from tkinter import  filedialog
+from tkinter.ttk import *
+
+PATH = ""
 
 
-KEYWORD = input('keyword: ')
+
+KEYWORD = ""
 MP4_PATH = "C:/Users/david/Documents/media/video.mp4"
 MP3_PATH = "C:/Users/david/Documents/media/video.mp3"
 WAV_PATH = "C:/Users/david/Documents/media/video.wav"
@@ -23,26 +29,35 @@ JSON_PATH = "C:/Users/david/Documents/media/video_json.txt"
 # TXTOUT_PATH_1 = "C:/Users/david/Documents/media/video_text_1.txt"
 # JSON_PATH_1 = "C:/Users/david/Documents/media/video_json_1.txt"
 
-
 def main():
+    window = tk.Tk()
+    window.columnconfigure(0, minsize=250)
+    window.rowconfigure([0, 1], minsize=100)
+    frame1 = tk.Frame(master=window, width=200, height=100, bg="red")
+    frame1.grid(row=0, column=0)
+    frame2 = tk.Frame(master=window, width=100, bg="yellow")
+    frame2.grid(row=1,column=0)
+    entry = tk.Entry(master=frame2)
+    button = tk.Button(frame1, text="Choose Video", default="in active", command=fdiag(), pady=10)
+    frame3 = tk.Frame(master=window, width=100, bg="yellow")
+    frame3.grid(row=1,column=1)
+    button_start = tk.Button(frame1, text="Start", default="inactive", pady=10, background='green', command=vosk_rec_thorough())
+    print("starting work on video :" + PATH)
+    text_to_search = entry.get()
+    KEYWORD = text_to_search
+    button_start.pack()
+    button.pack()
+    entry.pack()
     
     if (not os.path.exists(MP3_PATH)):
         convert()
     if not os.path.exists(SHORT_WAV_PATH):
         cut_audio()
-    value = input('choose function: ')
-    if value == 't':
-        if os.path.exists(JSON_PATH):
-            os.remove(JSON_PATH)
-        open(JSON_PATH, 'w')
-        vosk_rec_thorough()
-        player()
-    elif value == 's':
-        vosk_rec_small()
-    elif value =='n':
-        player()
-
-
+    window.mainloop()
+    player()
+def fdiag():
+    PATH = filedialog.askopenfilename()
+    return PATH
 # Conversion from mp4 to mp3 and then top mp3 to wav, then to mono channel wav
 def convert():
     ffmpeg_tools.ffmpeg_extract_audio(inputfile=MP4_PATH, output=MP3_PATH)
@@ -84,10 +99,10 @@ def pocketsphinx_recogniser():
 # * vosk recognizer works well
 
 
-def vosk_rec_thorough():
+def vosk_rec_thorough(wf):
     # GpuInit()
     # GpuThreadInit()
-    wf = wave.open(MONO_WAV_PATH, "rb")
+    
     results = []
     textResults = []
   
@@ -123,62 +138,17 @@ def vosk_rec_thorough():
         with open(JSON_PATH, 'a+') as output:
             print(word.to_txt(), file=output)
 
-    with open(JSON_PATH_1, 'w') as output:
+    with open(JSON_PATH, 'w') as output:
         print(results, file=output)
 
    
 
     # write text portion of results to a file
-    with open(TXTOUT_PATH_1, 'w') as output:
+    with open(TXTOUT_PATH, 'w') as output:
         print(json.dumps(textResults, indent=4), file=output)
     # write text portion of results to a file
     # with open(TXTOUT_PATH, 'w') as output:
     #     print(json.dumps(textResults, indent=4), file=output)
-
-# * vosk recognizer works not so well but takes five times less time to execute
-
-
-def vosk_rec_small():
-    wf = wave.open(MONO_WAV_PATH, "rb")
-    results = ""
-    textResults = []
-
-    model = Model(
-        r"C:/Users/david/Documents/media/vosk-model-small-en-us-0.15")
-
-    recognizer = KaldiRecognizer(model, wf.getframerate())
-    recognizer.SetWords(True)
-
-    while True:
-        data = wf.readframes(4000)
-        if len(data) == 0:
-            break
-        if recognizer.AcceptWaveform(data):
-            recognizerResult = recognizer.Result()
-            results = results + recognizerResult
-            # convert the recognizerResult string into a dictionary
-            resultDict = json.loads(recognizerResult)
-            # save the 'text' value from the dictionary into a list
-            textResults.append(resultDict.get("text", ""))
-
-    # else:
-    # print(recognizer.PartialResult())
-
-    # process "final" result
-    results = results + recognizer.FinalResult()
-    resultDict = json.loads(recognizer.FinalResult())
-    textResults.append(resultDict.get("text", ""))
-
-    # write results to a file
-    with open(JSON_PATH_1, 'w') as output:
-        print(results, file=output)
-
-   
-
-    # write text portion of results to a file
-    with open(TXTOUT_PATH_1, 'w') as output:
-        print(json.dumps(textResults, indent=4), file=output)
-
 
 
 

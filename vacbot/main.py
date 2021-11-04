@@ -13,7 +13,8 @@ from imap_tools import MailBox
 
 import pandas as pd
 arr = ["_Impfzentrum Triemli Zürich", "_Referenz-Impfzentrum Zürich", "Zürich, Amavita Apotheke Neumarkt Oerlikon","Zürich, Amavita Apotheke Zürich Altstetten", " Zürich, ApoDoc Hardbrücke (no appointment) "," Zürich, Apotheke Schaffhauserplatz","Zürich, Bahnhof Apotheke Oerlikon","Zürich, Coop Vitality Apotheke Zürich Bahnhofstrasse", " Zürich, DROPA Apotheke am Limmatplatz", "Zürich, Klus-Apotheke AG - Impfzentrum","Zürich, Medbase Apotheke Zürich Helvetiaplatz","Zürich, Neumarkt Apotheke","Zürich, Triemli-Apotheke & Drogerie"]
-
+PSSWD = ""'
+EMAIL ="dcolonna12.dc@gmail.com"
 
 last_center=""
 def main():
@@ -100,7 +101,7 @@ def login():
 
     password = driver.find_element_by_id("password")
     
-    password.send_keys("Architecte17/04")
+    password.send_keys(PSSWD)
     password.send_keys(Keys.RETURN)
     time.sleep(7)
     code = get_code()

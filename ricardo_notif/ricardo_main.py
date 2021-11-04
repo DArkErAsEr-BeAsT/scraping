@@ -65,7 +65,7 @@ def chrome_setup():
     chrome_options.add_argument("--disable-blink-features=AutomationControlled")
     chrome_options.add_argument('--ignore-certificate-errors')
     chrome_options.add_argument('--disable-dev-shm-usage')
-    driver = webdriver.Chrome( executable_path="/usr/local/bin/chromedriver",options=chrome_options)
+    driver = webdriver.Chrome( executable_path="chromedriver",options=chrome_options)
     driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
     
     looping(driver)
