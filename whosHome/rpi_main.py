@@ -1,7 +1,8 @@
 from scapy.all import *
 from concurrent.futures import ThreadPoolExecutor
+import time
 
-Kmac = "3E:80:2D:48:22:B8".lower()
+Kmac = "B8:41:A4:EC:25:1E".lower()
 
 Dmac = "E0:DC:FF:F3:4E:01".lower()
 
@@ -12,29 +13,36 @@ Nmac = "80:B0:3D:0D:7E:93".lower()
 def main():
     # for i in range(55):
     #     search_mac("10.0.0."+str(i))
+    start_time = time.time()    
     for i in range(5):
         ls = [("10.0.0."+str(i)) for i in range(55)]
-        with ThreadPoolExecutor(4) as exec:
+        with ThreadPoolExecutor() as exec:
             resp = exec.map(search_mac, ls)
+    print("--- %s seconds ---" % (time.time() - start_time))
+
     d_list = []
     k_list = []
     n_list = []
     c_list = []
+
     for list in resp:
         d_list.append(list[0])
         n_list.append(list[1])
         c_list.append(list[2])
         k_list.append(list[3])
-    if any(d_list):
-        print('david is here')
-    if any(k_list):
-        print('kajetan is here')
-    if any(n_list):
-        print('nathan is here')
-    if any(c_list):
-        print('clement is here')
-
-
+    with open('/home/pi/Documents/projects/projects/whosHome/tmp.txt', 'a')as f:
+        t = time.localtime()
+        current_time = time.strftime("%H:%M:%S", t)
+        f.write(current_time+'\n')
+        if any(d_list):
+            f.write('david is here\n')
+        if any(k_list):
+            f.write('kajetan is here\n')
+        if any(n_list):
+            f.write('nathan is here\n')
+        if any(c_list):
+            f.write('clement is here\n')
+        f.write('\n')
 def get_mac(ip):
     arp_request = ARP(pdst=ip)
     broadcast = Ether(dst="ff:ff:ff:ff:ff:ff")
@@ -87,4 +95,6 @@ def search_mac(ip):
 
 # print(scan('10.0.0.17'))
 # print(arping('10.0.0.*'))
-main()
+while True:
+    main()
+    time.sleep(5)
