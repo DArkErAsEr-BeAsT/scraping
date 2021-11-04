@@ -2,7 +2,8 @@
 
 from moviepy.editor import *
 from pydub import AudioSegment
-from multiprocessing.dummy import Pool
+from concurrent.futures import ThreadPoolExecutor
+from multiprocessing.dummy import Pool, freeze_support
 from vosk import GpuThreadInit, Model, KaldiRecognizer, GpuInit
 import json
 import wave
@@ -28,6 +29,8 @@ VIDEO = "video_mono.wav"
 
 def main():
     # convert()
+    if __name__ == '__main__':
+        freeze_support()
     cut_audio()
     parallelizer()
     
@@ -35,19 +38,25 @@ def main():
 
 
 def parallelizer():
-    processes = []
-    p = Pool(8)
-    wf = wave.open("C:/Users/david/Documents/media/0_video_mono.wav", "rb")
+    ls = [wave.open(FOLDER+"/"+str(i)+"_"+VIDEO, "rb" ) for i in range(2)]
+    with ThreadPoolExecutor(2) as exec:
+        resp = exec.map(vosk_rec_thorough, ls)
+   
 
-    for i in range(0,8):
-        f = FOLDER+"/"+str(i)+"_"+VIDEO
-        wf = wave.open(f, "rb")
-        print(f)
-        p = Process(target=vosk_rec_thorough(wf))
-        processes.append(p)
-        p.start()
-    for p in processes:
-        p.join()
+ 
+    # processes = []
+    # p = ThreadPoolExecutor(8)
+    
+
+    # for i in range(0,8):
+    #     f = FOLDER+"/"+str(i)+"_"+VIDEO
+    #     wf = wave.open(f, "rb")
+    #     print(f)
+    #     p = Process(target=vosk_rec_thorough, args=(wf,))
+    #     processes.append(p)
+    #     p.start()
+    # for p in processes:
+    #     p.join()
 
 # Conversion from mp4 to mp3 and then top mp3 to wav, then to mono channel wav
 def convert():
@@ -75,7 +84,7 @@ def vosk_rec_thorough(wf):
 
     model = Model(r"C:/Users/david/Documents/media/vosk-model-en-us-0.22")
     
-    recognizer = KaldiRecognizer(model, wf.getframerate())
+    recognizer = KaldiRecognizer(model, wf.getframerate(),verbose=0)
     recognizer.SetWords(True)
 
     while True:
