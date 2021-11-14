@@ -9,7 +9,7 @@
 
 - 💬 Ask me about **Python, Scraping and Java**
 
-- 📫 How to reach me **dcolonna12.dc@gmail.com**
+- 📫 How to reach me **colonnad@ethz.ch**
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">
